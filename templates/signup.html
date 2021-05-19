@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="container">
+    <div class="row ">
+        <div class="col-12 col-sm-4 mx-auto mt-2" style="box-shadow: 4px 4px 10px 4px grey;">
+            <div class="text-center">
+                <img src="/static/images/download.jpg" width="200px" alt="">
+            </div>
+            <form action="/sign" method="POST" novalidate>
+                {% csrf_token %}
+                {% for fm in form %}
+                <div class="form-group">
+                    {{fm.label_tag}} {{fm}} <small style="color: red;">{{fm.errors|striptags}} </small>
+
+
+                </div>
+                {% endfor %}
+                <button type="submit" style="width: 200px;" class="btn btn-success my-2">Signup</button>
+                <a href="/login" type="button" style="width: 150px;"  class="btn btn-success my-2">Login</a>
+                {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                <p class="alert alert-danger">{{error}}</p>
+                {% endfor %}
+
+                {% endif %}
+
+
+
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

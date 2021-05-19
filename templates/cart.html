@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load filter %}
+{% block body %}
+<div class="container mt-3">
+    <div class="row">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Sr.No</th>
+                <th scope="col">Image</th>
+                <th scope="col">Tshirt</th>
+                <th scope="col">Size</th>
+                <th scope="col">Price</th>
+                <th scope="col">Discount</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Actual Price</th>
+
+                <th scope="col">Total</th>
+                <th scope="col">Remove Item </th>
+
+
+              
+
+
+              
+
+                
+
+
+
+
+
+              </tr>
+            </thead>
+            <tbody>
+             {% for c in cart %}
+             <tr>
+                <th scope="">{{forloop.counter}}</th>
+                <td><img src="{{c.tshirt.image.url}}" height="70px" class="rounded-circle" alt=""></td>
+                <td>{{c.tshirt.name}}</td>
+                <td>{{c.size.size}}</td>
+                <td>Rs:{{c.size.price}}</td>
+                <td>{{c.tshirt.discount}}%</td>
+                <td>{{c.quantity}}</td>
+                <td>{% price c.size.price c.tshirt.discount as sale_price %}Rs:{{sale_price}}</td>
+
+                <td>{% multiply c.quantity sale_price as total %}Rs:{{total}}</td>
+                 <td>
+                  <form action="/deleteitem/" method="POST">
+                  {% csrf_token %}
+                  <input hidden type="text" name="tshirt" value="{{c.tshirt.id}}">
+                  <input type="submit" class="btn btn-danger" value="Remove Item">
+                    </form>
+
+                 </td>
+              
+              
+
+
+
+
+              </tr>
+             {% endfor %}
+             <tfoot>
+                 <tr>
+                     <th colspan="3"></th>
+                     <th colspan="5">Total</th>
+                     <th colspan="3">Rs:{{cart|totalamount}}</th>
+
+
+                 </tr>
+                 <tr>
+                    <th colspan="8"></th>
+
+                     <th colspan="2"><a href="{% url 'checkout' %}" class="btn btn-primary">Continue To Checkout</a></th>
+                     <th colspan="2"><a class="btn btn-danger" href="/removeitem">Clear Cart</a></th>
+                 </tr>
+             </tfoot>
+             
+            </tbody>
+         
+          </table>
+    </div>
+</div>
+  
+{% endblock body %}

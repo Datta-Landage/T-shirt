@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block body %}
+{% load filter %}
+<div class="container-fluid">
+    <div class="row">
+         {% emty orders as emty %}
+         {% if emty %}
+         <div class="col-sm-4 mx-auto mt-5 ">
+          <img src="/static/images/empty.png" alt="">
+         
+         </div>
+         {% else %}
+         <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Sr.No</th>
+              <th scope="col">Date</th>
+              <th scope="col">Items</th>
+              <th scope="col">Status</th>
+              
+
+
+             
+            </tr>
+          </thead>
+          <tbody>
+           {% for order in orders %}
+           
+          
+             
+           <tr>
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{order.date}}</td>
+              
+              <td>
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          
+                          <th scope="col">Name</th>
+                          <th scope="col">Size</th>
+                          <th scope="col">Image</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Quantity</th>
+                          <th scope="col">Total</th>
+
+                          
+                          
+
+
+
+
+
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                       {% for oi in order.orderitem_set.all  %}
+                       <tr>
+                          <td>{{oi.tshirt.name}}</td>
+                          <td>{{oi.size.size}}</td>
+                          <td><a href="{{oi.tshirt.image.url}}"><img src="{{oi.tshirt.image.url}}" class="rounded" style="height: 60px;" alt=""></a></td>
+                          <td>Rs: {{oi.price}}</td>
+                          <td> {{oi.quantity}}</td>
+                          <td>{% multiply oi.price oi.quantity %}</td>
+                          
+
+
+
+                            
+                        </tr>
+                       {% endfor %}
+                       
+                      </tbody>
+                    </table>
+              </td>
+              <td>
+              {% if order.order_status == "PLACE" %}
+              <span class="badge bg-warning text-dark">{{order.order_status}}</span>
+              {% else %}
+              <span class="badge bg-primary text-white">{{order.order_status}}</span>
+              {% endif %}
+               </td>
+
+            </tr>
+           {% endfor %}
+           
+          </tbody>
+        </table>
+         {% endif %}
+       
+    </div>
+</div>
+  
+{% endblock body %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% load crispy_forms_tags %}
+{% load filter %}
+<div class="container mt-3">
+    <div class="row">
+
+     <h1>checkout page is here</h1>
+     <hr>
+     <div class="col-sm-6">
+        <h3>Your Summary::</h3>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Sr.No</th>
+                <th scope="col">Tshirt</th>
+                <th scope="col">Size</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Amount</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in cart  %}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{c.size.tshirt.name}}</td>
+                <td>{{c.size.size}}</td>
+                <td>{{c.quantity}}</td>
+                <td>{% price c.size.price c.size.tshirt.discount as sale_price %}{{sale_price}}</td>
+
+              </tr>
+              {% endfor %}
+              
+            </tbody>
+          </table>
+    </div>
+     <div class="col-sm-6  border" >
+         <h3><b class="text-dark">Total Amount: Rs {{cart|totalamount}}</b></h3>
+        <form action="/checkout/" method="POST" class="mt-2">
+            {% csrf_token %}
+           {{form|crispy}}
+
+            <button type="submit" style="width: 100%;" class="btn btn-dark">Place Order</button>
+          </form>
+     </div>
+    
+    </div>
+</div>
+  
+{% endblock body %}

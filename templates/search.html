@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block body %}
+{% load filter%}
+
+<div class="container mt-5">
+    <h1>Search Result </h1>
+    
+    {% if tshirts|length < 1  %}
+    <p>No Result found</p>
+    <p> Your Search: <b>{{query}}</b>? did'nt match any document!!! plase enter again</p>
+    <ul>
+        <li>Please write in short</li>
+    </ul>
+        
+    {% endif %}
+        
+    <div class="row mb-2">
+        {% for tshirt in tshirts %}
+          
+        <div class="col-12 col-sm-3 mt-2 ">
+            <div class="card mx-auto h-100" style="width: 18rem; height:600px ;">
+                <img src="{{tshirt.image.url}}"  class="card-img-top img-fluid" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">{{tshirt.name}}</h5>
+                  <p style="color:green; float:right;"> Save: {{tshirt.discount}}%</p>
+                 <p><del class="text-danger">₹ {% min_price  tshirt %}</del> <span> &nbsp; <b>₹ {% sale_price tshirt %}</b> </span></p>
+                 
+                </div>
+                
+                <div class="card-footer ">
+                  <div class="row">
+                    <a href="{% url 'productpage' tshirt.slug %}" class="btn btn-primary">Show More</a>
+                  </div>
+                </div>
+               
+              </div>
+           </div>
+
+
+          {% endfor %}
+
+    </div>
+</div>
+
+
+{% endblock body %}

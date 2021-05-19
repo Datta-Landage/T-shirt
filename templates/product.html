@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load filter %}
+{% load humanize %}
+{% block body %}
+{% load humanize %}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-12 col-sm-4 mt-2 ">
+            <div class="card mx-auto h-100" style="width: 18rem; height:600px ;">
+                <img src="{{tshirt.image.url}}" class="card-img-top img-fluid" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{tshirt.name}}</h5>
+                    <p style="color:green; float:right;"> Save: {{tshirt.discount}}%</p>
+                    <p><del class="text-danger">₹ {% min_price tshirt %}</del> <span> &nbsp; <b>₹ {% sale_price tshirt %}</b> </span></p>
+
+                </div>
+
+                <div class="card-footer ">
+                    {% is_in_cart tshirt request.session.cart activesize.size as name %}
+
+                    {% if name %}
+                    <div class="row ">
+                        <a href="/removequantity/{{tshirt.slug}}/{{activesize.size}}?return_url={{request.get_full_path}} "
+                            class="btn btn-danger col-2">-</a>
+
+                        <div class="text-center col">{% cart_quantity tshirt cart activesize.size %} in Cart</div>
+
+
+                        <a href="/addtocart/{{tshirt.slug}}/{{activesize.size}}?return_url={{request.get_full_path}}"
+                            class="btn btn-danger col-2">+</a>
+                        <div class="p-0 mt-2"  >
+                            <a href="/cart/" style="width: 277px;"  class="btn btn-primary">Go To Cart</a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <a href="/addtocart/{{tshirt.slug}}/{{activesize.size}}?return_url={{request.get_full_path}}"
+                            class="btn btn-primary">Add The Cart</a>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 border border-3">
+            <h2>Discription::</h2>
+            <p>{{tshirt.name}}{{tshirt.price}}
+                {{tshirt.color}}
+                {{tshirt.brand}}
+                {{tshirt.sleeve}}
+                {{tshirt.necktype}}
+                {{tshirt.occasion}}
+                {{tshirt.idealfor}}
+            </p>
+
+            <div class="row">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Size
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {% for size in tshirt.sizevariant_set.all %}
+                            <li><a class="dropdown-item {% if activesize.size is size.size %} active {% endif %}"
+                                    href="/product/{{tshirt.slug}}?size={{size.size}}">{{size.size}}</a></li>
+
+                            {% endfor %}
+
+                        </ul>
+                        <p><span><del class="text-danger">₹ {{sell_price}}</del></span> &nbsp; <strong>Price: ₹
+                                {{discount}}</strong> &nbsp; Save: {{tshirt.discount}}%</p>
+                    </div>
+
+                </div>
+                <div class="col mt-3 ">
+                    <a href="/addtocart/{{tshirt.slug}}/{{activesize.size}}?return_url=cart" class="btn btn-primary  "
+                        style="width: 300px;">Bye Now</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<h1></h1>
+{% if request.user.is_authenticated %}
+<div class="container">
+    <h5>Comments: <span class="badge bg-warning text-dark">{{comment.count}}</span> </h5>
+    <!-- <div class="fb-like" data-href="http://127.0.0.1:8000/blogpost/{{post.slug}}/" data-width="" data-layout="box_count" data-action="like" data-size="small" data-share="true"></div> -->
+    <form action="/postcomment/" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="comment" class="form-label">Add Comment Here: </label>
+            <input type="hidden" class="form-control" name="tshirtslug" value="{{tshirt.slug}}">
+            <input type="hidden" name="parentSno" value="">
+            <input type="text" required name="comment" placeholder="enter comment here" class="form-control">
+            <button type="submit" class="btn btn-outline-info mt-2"><i class="fas fa-paper-plane">POST</i></button>
+
+        </div>
+    </form>
+</div>
+<div class="container">
+    {% for com in comment %}
+    <div class="row mt-2">
+
+
+        <div class="col-sm-8 col-12 ">
+            <img src="/static/images/free-user-login-icon-305-thumb.png" class="img-fluid " height="70px" width="70px"
+                alt="">
+            <b> {{com.user.username}}</b> At:
+            {{com.timestamp|naturaltime}}
+            <p>{{com.comment}}</p>
+            <a class="btn btn-outline-danger" data-bs-toggle="collapse" href="#reply{{com.id}}" role="button"
+                aria-expanded="false" aria-controls="collapseExample">
+                <i class="fas fa-reply">Reply</i>
+            </a>
+
+            <div class="collapse" id="reply{{com.id}}">
+                <div class="card card-body">
+                    <form action="/postcomment/" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="comm" class="form-label">Reply Comment: </label>
+                            <input type="hidden" class="form-control" name="tshirtslug" value="{{tshirt.slug}}">
+                            <input type="text" required name="comment" placeholder="enter comment here"
+                                class="form-control">
+                            <input type="hidden" name="parentSno" value="{{com.id}}">
+                            <input type="hidden" name="postid" value="{{tshirt.slug}}">
+                            <button type="submit" class=" btn btn-outline-info mt-2"><i
+                                    class="fas fa-paper-plane">Reply</i></button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="reply py-2 " style="margin-left: 50px;">
+
+                {% for reply in replydict|get_val:com.id %}
+                <img src="/static/images/free-user-login-icon-305-thumb.png" class="img-fluid " height="30px"
+                    width="30px" alt="">
+                <b> {{reply.user.username}}</b> At:
+                {{reply.timestamp|naturaltime}}
+
+                <p class="text-danger "> {{reply}}</p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+
+
+{% else %}
+<div class="container">
+    <p><b>You Must Login For Comment!!!</b></p>
+    <a href="/login/" class="btn btn-outline-info">Login For Comment</a>
+</div>
+<div class="container">
+    <div class="row">
+        <h5><b>Comments:<span class="badge bg-warning text-dark">{{comment.count}}</span></b></h5>
+        {% for com in comment %}
+
+        <div class="col-sm-8 col-12 mt-2">
+            <img src="/static/images/free-user-login-icon-305-thumb.png" class="img-fluid " height="70px" width="70px"
+                alt="">
+            <b> {{com.user.username}}</b> At:
+            {{com.timestamp|naturaltime}}
+            <p>{{com.comment}}</p>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+{% endif %}
+
+
+
+
+
+
+{% endblock body %}

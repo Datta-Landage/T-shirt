@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        
+            <div class="col-12 col-sm-4 mt-4 mx-auto" style="box-shadow: 4px 5px 8px 2px  grey;">
+                <div class="text-center">
+                    <img src="/static/images/free-user-login-icon-305-thumb.png" width="200px" alt="">
+                </div>
+                <form action="/login/" method="POST" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                      <p style="color: blue;">{{error}}</p>
+                    {% endfor %}
+                        
+                    {% endif %}
+                    {% for fm in form %}
+                    {{fm.label_tag}} {{fm}}  <p style="color: red;"> {{fm.errors|striptags}} </p> <br>
+                      
+                    {% endfor %}
+       
+                    <button  type="submit" style="width: 100%;" class="btn btn-success mb-2">Login</button>
+                        
+                   </form>
+                  
+                   
+                   
+            </div>
+        
+    </div>
+</div>
+  
+{% endblock body %}
