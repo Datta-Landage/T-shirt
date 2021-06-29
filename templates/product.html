@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load filter %}
-{% load humanize %}
+
 {% block body %}
-{% load humanize %}
+
 <div class="container mt-3">
     <div class="row">
         <div class="col-12 col-sm-4 mt-2 ">
@@ -111,7 +111,7 @@
             <img src="/static/images/free-user-login-icon-305-thumb.png" class="img-fluid " height="70px" width="70px"
                 alt="">
             <b> {{com.user.username}}</b> At:
-            {{com.timestamp|naturaltime}}
+            {{com.timestamp}}
             <p>{{com.comment}}</p>
             <a class="btn btn-outline-danger" data-bs-toggle="collapse" href="#reply{{com.id}}" role="button"
                 aria-expanded="false" aria-controls="collapseExample">
@@ -142,7 +142,7 @@
                 <img src="/static/images/free-user-login-icon-305-thumb.png" class="img-fluid " height="30px"
                     width="30px" alt="">
                 <b> {{reply.user.username}}</b> At:
-                {{reply.timestamp|naturaltime}}
+                {{reply.timestamp}}
 
                 <p class="text-danger "> {{reply}}</p>
 
@@ -172,7 +172,7 @@
             <img src="/static/images/free-user-login-icon-305-thumb.png" class="img-fluid " height="70px" width="70px"
                 alt="">
             <b> {{com.user.username}}</b> At:
-            {{com.timestamp|naturaltime}}
+            {{com.timestamp}}
             <p>{{com.comment}}</p>
         </div>
 
